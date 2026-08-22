@@ -8,3 +8,4 @@ Current release: `0.2ver`
 - Full audit log with user IDs
 - Completed tasks remain on the board for seven days
 - All-time completed total and archive in the admin page
+- Trigger fresh Vercel deploy
