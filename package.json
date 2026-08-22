@@ -1,0 +1,16 @@
+{
+  "name": "company-task-board-vercel",
+  "displayName": "Company Task Board",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate-artifact.mjs",
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "vercel": "^48.0.0"
+  }
+}
