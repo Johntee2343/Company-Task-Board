@@ -4,13 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "validate": "node scripts/validate-artifact.mjs",
-    "dev": "vercel dev"
+    "validate": "node scripts/validate-artifact.mjs"
   },
   "dependencies": {
     "pg": "^8.23.0"
-  },
-  "devDependencies": {
-    "vercel": "^48.0.0"
   }
 }
