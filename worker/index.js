@@ -2531,16 +2531,14 @@ const compactCards = `
 }
 .board-scroll {
   display:block;
-  overflow-x:auto;
+  overflow-x:hidden;
   padding:2px 2px 16px;
   scrollbar-color:#7d8da6 #edf2f8;
   scrollbar-width:thin
 }
 .task-list {
   display:grid;
-  grid-auto-flow:column;
-  grid-auto-columns:calc((100% - 54px)/4);
-  grid-template-columns:none;
+  grid-template-columns:repeat(4,minmax(0,1fr));
   gap:18px;
   min-width:100%;
   align-items:stretch
@@ -2615,9 +2613,12 @@ const compactCards = `
   --status-color:#10b981;
   background:linear-gradient(135deg,#fff,#f0fdf4)
 }
+.mobile-add-task {
+  display:none
+}
 @media(max-width:1100px) {
   .task-list {
-    grid-auto-columns:calc((100% - 36px)/3)
+    grid-template-columns:repeat(4,minmax(0,1fr))
   }
   .stat {
     flex-basis:calc((100% - 26px)/3)
@@ -2625,7 +2626,7 @@ const compactCards = `
 }
 @media(max-width:760px) {
   .task-list {
-    grid-auto-columns:calc((100% - 18px)/2)
+    grid-template-columns:repeat(4,minmax(0,1fr))
   }
   .stat {
     flex-basis:calc((100% - 13px)/2)
@@ -2633,7 +2634,7 @@ const compactCards = `
 }
 @media(max-width:520px) {
   .task-list {
-    grid-auto-columns:100%
+    grid-template-columns:repeat(4,minmax(0,1fr))
   }
   .task-row {
     min-height:auto
@@ -2734,6 +2735,433 @@ const authStyles = `
   }
 }
 `;
+
+const mobileStyles = `
+@media(max-width:700px) {
+  body {
+    overflow-x:hidden;
+    -webkit-text-size-adjust:100%
+  }
+  .topbar {
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    grid-template-areas:
+      "left logo right"
+      "nav nav nav";
+    height:auto;
+    min-height:104px;
+    align-items:center;
+    gap:8px 10px;
+    padding:12px 14px 10px;
+    position:sticky
+  }
+  .top-left {
+    display:contents;
+    min-width:0;
+    flex:1
+  }
+  .brand {
+    grid-area:left;
+    gap:8px;
+    min-width:0
+  }
+  .brand .mark {
+    width:34px;
+    height:34px;
+    border-radius:10px;
+    flex:0 0 auto
+  }
+  .brand span {
+    display:block;
+    max-width:104px;
+    line-height:1.1;
+    font-size:14px
+  }
+  .nav {
+    grid-area:nav;
+    justify-self:center;
+    margin-left:0;
+    gap:5px;
+    flex-wrap:nowrap;
+    padding:4px;
+    border:1px solid #dfe7f2;
+    border-radius:999px;
+    background:#fff;
+    box-shadow:0 8px 20px rgba(28,42,68,.06)
+  }
+  .nav a {
+    min-width:82px;
+    padding:8px 12px;
+    text-align:center;
+    font-size:13px;
+    border-radius:999px
+  }
+  .top-logo {
+    grid-area:logo;
+    position:static;
+    transform:none;
+    justify-self:center;
+    width:126px;
+    max-height:44px;
+    top:auto
+  }
+  .identity {
+    grid-area:right;
+    gap:6px;
+    justify-content:flex-end;
+    flex-wrap:wrap;
+    max-width:120px;
+    justify-self:end
+  }
+  .identity .role {
+    display:none
+  }
+  .identity .btn {
+    height:32px;
+    padding:6px 9px;
+    font-size:12px
+  }
+  .avatar {
+    display:none
+  }
+  .shell {
+    width:100%;
+    padding:18px 12px 48px
+  }
+  .hero {
+    display:block;
+    margin-bottom:14px
+  }
+  .eyebrow {
+    font-size:11px;
+    letter-spacing:.1em
+  }
+  .hero h1 {
+    font-size:24px;
+    line-height:1.05;
+    margin:6px 0
+  }
+  .hero p {
+    font-size:14px;
+    line-height:1.45
+  }
+  .hero .btn.primary {
+    display:none
+  }
+  .stats {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    overflow:visible;
+    margin:0 0 14px;
+    padding:0
+  }
+  .stat {
+    min-width:0;
+    flex:auto;
+    min-height:82px;
+    padding:13px;
+    border-radius:13px
+  }
+  .stat strong {
+    font-size:24px
+  }
+  .toolbar {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    padding:10px;
+    margin-bottom:14px;
+    border-radius:14px
+  }
+  .toolbar .input,.toolbar .select {
+    min-width:0;
+    width:100%;
+    height:46px;
+    border-radius:12px;
+    font-size:15px
+  }
+  .toolbar .search {
+    grid-column:1
+  }
+  .toolbar .select {
+    grid-column:2
+  }
+  .toolbar .select:nth-of-type(1) {
+    grid-row:1
+  }
+  .toolbar .select:nth-of-type(2),
+  .toolbar .select:nth-of-type(3) {
+    grid-column:1 / -1
+  }
+  .board-wrap {
+    margin:0 -12px;
+    padding:0 12px;
+    overflow:hidden
+  }
+  .task-list {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+    overflow:visible;
+    padding:0;
+    scroll-snap-type:none;
+    scrollbar-width:thin
+  }
+  .task-list::-webkit-scrollbar,
+  .stats::-webkit-scrollbar,
+  .admin-tabs::-webkit-scrollbar {
+    height:9px
+  }
+  .task-list::-webkit-scrollbar-thumb,
+  .stats::-webkit-scrollbar-thumb,
+  .admin-tabs::-webkit-scrollbar-thumb {
+    background:#b8c5d6;
+    border-radius:999px;
+    border:2px solid #eef3f9
+  }
+  .task-row {
+    flex:auto;
+    width:auto;
+    min-width:0;
+    max-width:none;
+    min-height:235px;
+    padding:16px 12px 14px 22px;
+    grid-template-columns:1fr;
+    scroll-snap-align:start
+  }
+  .mobile-add-task {
+    display:grid;
+    width:auto;
+    min-width:0;
+    max-width:none;
+    min-height:235px;
+    place-items:center;
+    border:2px dashed #9aa7b8;
+    border-radius:12px;
+    background:rgba(255,255,255,.72);
+    color:#172033;
+    font-weight:850;
+    text-align:center;
+    cursor:pointer;
+    box-shadow:none
+  }
+  .mobile-add-task span {
+    display:block;
+    color:#647087;
+    font-size:20px;
+    line-height:1;
+    margin-top:4px
+  }
+  .task-row::before {
+    left:0;
+    top:0;
+    bottom:0;
+    width:6px;
+    border-radius:12px 0 0 12px
+  }
+  .task-actions {
+    justify-content:flex-start;
+    margin-top:auto
+  }
+  .task-actions .btn {
+    min-height:36px;
+    padding:8px 9px
+  }
+  .meta,.tag-row,.actions {
+    gap:5px
+  }
+  .pill,.tag,.category-chip {
+    font-size:9px;
+    padding:4px 6px;
+    max-width:100%;
+    white-space:normal
+  }
+  .task-main h3 {
+    font-size:15px;
+    line-height:1.2
+  }
+  .task-desc {
+    font-size:12px;
+    -webkit-line-clamp:2
+  }
+  .dialog {
+    width:100vw;
+    max-width:100vw;
+    height:100dvh;
+    max-height:100dvh;
+    margin:0;
+    border-radius:0
+  }
+  .dialog form {
+    min-height:100dvh
+  }
+  .modal-head {
+    min-height:64px;
+    padding:14px 16px
+  }
+  .modal-head h2 {
+    font-size:19px;
+    max-width:42%
+  }
+  .modal-logo {
+    width:122px;
+    max-height:48px
+  }
+  .modal-body {
+    padding:16px;
+    max-height:none;
+    flex:1
+  }
+  .modal-foot {
+    position:sticky;
+    bottom:0;
+    background:#fff;
+    padding:12px 16px;
+    gap:8px
+  }
+  .modal-foot .btn {
+    min-height:44px;
+    flex:1
+  }
+  .split-foot {
+    align-items:stretch
+  }
+  .split-foot > div {
+    flex:1
+  }
+  .row,.settings-grid {
+    grid-template-columns:1fr
+  }
+  .check-grid {
+    gap:7px
+  }
+  .check-tag {
+    min-height:38px;
+    max-width:100%;
+    align-items:center
+  }
+  .category-block {
+    max-width:100%
+  }
+  .category-trigger {
+    max-width:100%
+  }
+  .sub-category-menu {
+    position:fixed;
+    left:12px;
+    right:12px;
+    top:auto;
+    bottom:82px;
+    min-width:0;
+    max-height:42vh
+  }
+  .auth-page {
+    align-items:start;
+    padding:18px 12px
+  }
+  .auth-card {
+    margin-top:7vh;
+    padding:22px 18px;
+    border-radius:16px
+  }
+  .admin-grid {
+    display:block
+  }
+  .admin-tabs {
+    position:sticky;
+    top:104px;
+    z-index:15;
+    display:flex;
+    gap:7px;
+    overflow-x:auto;
+    margin:0 -12px 14px;
+    padding:10px 12px;
+    border-radius:0;
+    border-left:0;
+    border-right:0
+  }
+  .admin-tab {
+    width:auto;
+    flex:0 0 auto;
+    white-space:nowrap;
+    min-height:40px
+  }
+  .card {
+    padding:14px;
+    border-radius:14px
+  }
+  .card-head {
+    align-items:flex-start;
+    flex-direction:column
+  }
+  .card-head .btn {
+    width:100%
+  }
+  .table-scroll {
+    margin:0 -14px;
+    padding:0 14px 8px
+  }
+  .table {
+    min-width:680px
+  }
+  .setting-row,
+  .category-group-head,
+  .sub-setting {
+    align-items:flex-start;
+    grid-template-columns:minmax(0,1fr);
+    flex-direction:column
+  }
+  .category-group-head {
+    display:grid;
+    grid-template-columns:28px minmax(0,1fr);
+    row-gap:10px
+  }
+  .category-group-head .setting-actions {
+    grid-column:1 / -1;
+    width:100%
+  }
+  .category-group-head .setting-actions .btn,
+  .sub-setting .btn,
+  .setting-row .btn {
+    flex:1;
+    min-height:38px
+  }
+  .sub-setting {
+    padding-left:40px
+  }
+  .pager {
+    justify-content:center;
+    flex-wrap:wrap
+  }
+  #commentDialog .comments {
+    max-height:48vh
+  }
+}
+
+@media(max-width:380px) {
+  .top-logo {
+    width:108px
+  }
+  .identity {
+    max-width:none
+  }
+  .task-row {
+    min-height:220px;
+    padding-right:10px
+  }
+  .mobile-add-task {
+    min-height:220px
+  }
+  .hero h1 {
+    font-size:25px
+  }
+  .stat {
+    min-height:78px
+  }
+}
+`;
+
 function shell(content, title) {
   return `<!doctype html>
 <html lang="en">
@@ -2741,7 +3169,7 @@ function shell(content, title) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>${title} · Company Task Board</title>
-    <style>${styles}${tweaks}${polish}${compactCards}${authStyles}</style>
+    <style>${styles}${tweaks}${polish}${compactCards}${authStyles}${mobileStyles}</style>
   </head>
   <body>${content}</body>
 </html>`;
@@ -3158,6 +3586,16 @@ function card(t) {
   );
 }
 
+function mobileAddTaskCard() {
+  if (!state.user?.canManageTasks || location.pathname === "/completed")
+    return "";
+  return (
+    '<button type="button" class="mobile-add-task" data-mobile-add-task>' +
+    "Add Task<span>+</span>" +
+    "</button>"
+  );
+}
+
 function renderStats() {
   const visible = filtered().length,
     cards = [
@@ -3198,9 +3636,11 @@ function render() {
     $("#priorityFilter").value = "all";
     $("#tagFilter").value = "all";
   }
-  $("#board").innerHTML = tasks.length
-    ? '<div class="task-list">' + tasks.map(card).join("") + "</div>"
-    : '<div class="empty"><b>No tasks match</b><span>Try another search.</span></div>';
+  const addCard = mobileAddTaskCard();
+  $("#board").innerHTML =
+    tasks.length || addCard
+      ? '<div class="task-list">' + tasks.map(card).join("") + addCard + "</div>"
+      : '<div class="empty"><b>No tasks match</b><span>Try another search.</span></div>';
 }
 
 function openTask(task) {
@@ -3300,6 +3740,9 @@ async function reload() {
   render();
 }
 $("#newTaskBtn").addEventListener("click", () => openTask(null));
+$("#board").addEventListener("click", (event) => {
+  if (event.target.closest("[data-mobile-add-task]")) openTask(null);
+});
 $("#tagChecks").addEventListener("change", (e) => {
   const child = e.target.closest("[data-sub-parent]");
   if (child?.checked) {
